@@ -1,0 +1,55 @@
+fieldset {
+  border: 1px solid #ccc;
+  margin-bottom: 1.4rem;
+}
+legend {
+  text-transform: uppercase;
+  color: color(accent);
+}
+
+.fieldset {
+  display: flex;
+  flex-wrap: wrap;
+
+  > * {
+    flex-basis: 20em;
+  }
+}
+
+.field {
+  margin: .5em;
+  display: flex;
+}
+
+.field__label {
+  min-width: 8em;
+  text-align: right;
+  margin-right: .5em;
+}
+
+.field__input {
+}
+
+.field--patterns {
+  flex-direction: row;
+  flex-basis: 100%;
+}
+
+.form-actions {
+  margin: .5em;
+  margin-bottom: 1.5em;
+}
+
+button#generate {
+  font-size: 1.3em;
+}
+
+.composition__wrapper {
+  margin: 1.5em 0;
+}
+
+.composition__toggle {
+  cursor: pointer;
+
+  text-decoration: underline;
+}

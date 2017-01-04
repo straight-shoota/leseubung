@@ -1,0 +1,19 @@
+.render-area {
+  border-top: 2px solid color(accent);
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.render-area__extra {
+  max-width: 20em;
+  padding: 1em;
+
+  > button {
+    margin-bottom: .5em;
+    display: inline-block;
+  }
+}
+
+.composition {
+  width: 100%;
+}

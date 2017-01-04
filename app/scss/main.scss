@@ -1,0 +1,32 @@
+@charset 'UTF-8';
+
+@import
+  'abstracts/functions',
+  'abstracts/variables',
+  'abstracts/mixins';
+
+// 2. Vendors
+//@import
+  //'vendor/normalize',;
+
+
+// 3. Base stuff
+@import
+  'base/typography';
+
+// 4. Layout-related sections
+//@import
+//  'layout';
+
+// 5. Components
+@import
+  'components/page',
+  'components/fields';
+
+// 6. Page-specific styles
+///*@import
+//  'pages/page';*/
+
+// 7. Themes
+//@import
+//  'themes/default';

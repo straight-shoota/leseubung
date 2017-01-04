@@ -1,0 +1,26 @@
+html, body {
+  font-family: $font-copy;
+  font-size: $base-font-size;
+  line-height: $line-height;
+}
+
+label {
+  font-weight: bold;
+  color: color(accent);
+}
+
+button {
+  background-color: color(accent);
+  color: color(white);
+  padding: .5em 1.2em;
+  text-transform: uppercase;
+  font-weight: normal;
+  border: none;
+  border-radius: .1em;
+  cursor: pointer;
+
+  &:hover {
+    background-color: color(accent-dark);
+  }
+}
+

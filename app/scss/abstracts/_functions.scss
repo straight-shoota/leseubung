@@ -1,0 +1,6 @@
+@function color($key: #0f0) {
+  $color: map-get($colors, $key) or $key;
+  // Recursive check
+  $color: if(map-has-key($colors, $color), color($color), $color);
+  @return $color;
+}

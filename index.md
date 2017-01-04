@@ -3,8 +3,7 @@
 This is a generator for musical note sequences to train recognition and instrumentation of musical compositions.
 It uses [ABC Notation](http://abcnotation.com/wiki/abc:standard:v2.1) to define short patterns.
 
-* [Run app](./app)
-* [Run standalone app](./standalone.html)
+**[Run app](standalone.html)**
 
 Utilized Libraries:
 

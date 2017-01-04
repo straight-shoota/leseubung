@@ -3,10 +3,11 @@
 This is a generator for musical note sequences to train recognition and instrumentation of musical compositions.
 It uses [ABC Notation](http://abcnotation.com/wiki/abc:standard:v2.1) to define short patterns.
 
-* [Run app](/app)
-* [Run standalone app](/standalone.html)
+* [Run app](./app)
+* [Run standalone app](./standalone.html)
 
 Utilized Libraries:
+
 * [abcjs](https://github.com/paulrosen/abcjs) - music rendering
 * [saveSvgAsPng](https://github.com/exupero/saveSvgAsPng) - export to PNG
 

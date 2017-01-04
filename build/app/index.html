@@ -26,7 +26,7 @@
           <label for="unit_count">Zähleinheit (L):</label>
         </div>
         <div class="field__input">
-          1/<input type="integer" id="unit_count" size="2" value="8">
+          1/<input type="integer" id="unit_count" size="2" value="8" class="align-left">
         </div>
       </div>
 
@@ -51,7 +51,7 @@
           <label for="key">Tonart:</label>
         </div>
         <div class="field__input">
-          <input id="key" value="none" />
+          <input id="key" value="none" type="text" />
         </div>
       </div>
     </div>
@@ -84,7 +84,7 @@ c/2cc/2
 cc/2c/2
 z/2c/2c/2c/2
 c/2c/2c/2c/2
-          </textarea>
+</textarea>
         </div>
       </div>
 
@@ -148,7 +148,7 @@ c/2c/2c/2c/2
           <label for="pitches">Tonhöhen:</label>
         </div>
         <div class="field__input">
-          <input type="text" id="pitches" size="8" value="cdefgab" />
+          <input type="text" id="pitches" size="96" value="c | d | e | f | g | a | b" />
         </div>
       </div>
 
@@ -165,12 +165,13 @@ c/2c/2c/2c/2
   <aside class="render-area__extra">
     <button id="download-png">Als .PNG speichern</button>
     <button id="download-svg">Als .SVG speichern</button>
+    <button id="download-abc">Als .ABC speichern</button>
   </aside>
 </div>
 
 <div class="composition__wrapper">
   <span class="composition__toggle" id="toggle-handler">ABC Noten anzeigen</span>
-  <textarea class="composition" id="composition" cols="80" rows="15" readonly style="display: none;"></textarea>
+  <textarea class="composition" id="composition" cols="80" rows="15" style="display: none;"></textarea>
 </div>
 
 <a href="http://abcnotation.com/wiki/abc:standard:v2.1">ABC Notation</a>

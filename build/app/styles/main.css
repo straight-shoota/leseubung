@@ -42,6 +42,17 @@ legend {
   text-transform: uppercase;
   color: #666666; }
 
+input[type=text], input[type=integer], textarea, select {
+  padding: .3em;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: .2em; }
+
+input[type=integer]:not(:nth-of-type(2)):not(.align-left) {
+  text-align: right; }
+
 .fieldset {
   display: flex;
   flex-wrap: wrap; }
@@ -51,6 +62,8 @@ legend {
 .field {
   margin: .5em;
   display: flex; }
+  .field:not(.field--patterns) {
+    align-items: baseline; }
 
 .field__label {
   min-width: 8em;

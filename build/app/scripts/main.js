@@ -1,4 +1,4 @@
-var $$, $val, abc_editor, default_pitches, downloadPNG, downloadSVG, filename, generate, initializeToggle, random, randomize_pitch, setCaretPosition;
+var $$, $val, abc_editor, default_pitches, downloadABC, downloadPNG, downloadSVG, downloadTextContent, filename, generate, initializeToggle, random, randomize_pitch, setCaretPosition;
 
 abc_editor = new ABCJS.Editor("composition", {
   paper_id: "paper",
@@ -42,7 +42,7 @@ generate = function() {
   rows = $val('row_count');
   bars_per_row = $val('bars_per_row');
   random_pitch = $$('random_pitch').checked;
-  pitches = $val('pitches');
+  pitches = $val('pitches').match(/((?:_{0,2}|\^{0,2}|=)[a-hA-H][,']*)/g);
   patterns_per_bar = count / meter * pattern_length / pattern_count;
   patterns_per_row = 12;
   staffwidth = $val('staffwidth');
@@ -102,6 +102,11 @@ $$('download-png').addEventListener('click', function(e) {
   return downloadPNG();
 });
 
+$$('download-abc').addEventListener('click', function(e) {
+  e.preventDefault();
+  return downloadABC();
+});
+
 $$('generate').addEventListener('click', function(e) {
   e.preventDefault();
   return generate();
@@ -122,19 +127,31 @@ downloadPNG = function() {
   return saveSvgAsPng(document.querySelector("#paper > svg"), filename('png'), options);
 };
 
-downloadSVG = function() {
-  var a, data, svg, xml;
-  svg = document.querySelector("#paper > svg");
-  xml = new XMLSerializer().serializeToString(svg);
-  data = "data:image/svg+xml;utf8," + xml;
+downloadTextContent = function(data, filename, mime_type) {
+  var a, data_uri;
+  data_uri = "data:" + mime_type + ";utf8," + (encodeURIComponent(data));
   console.log(data);
   a = document.createElement('a');
-  a.href = data;
-  a.download = filename('svg');
+  a.href = data_uri;
+  a.download = filename;
   a.target = '_blank';
   document.body.appendChild(a);
   a.click();
   return document.body.removeChild(a);
+};
+
+downloadSVG = function() {
+  var svg, xml;
+  svg = document.querySelector("#paper > svg");
+  xml = new XMLSerializer().serializeToString(svg);
+  return downloadTextContent(xml, filename('svg'), 'image/svg+xml');
+};
+
+downloadABC = function() {
+  var abcdata;
+  abcdata = $val('composition');
+  abcdata = ["%abc-2.1", abcdata].join("\n");
+  return downloadTextContent(abcdata, filename('abc'), 'text/vnd.abc');
 };
 
 setCaretPosition = function(elem, caretPos) {

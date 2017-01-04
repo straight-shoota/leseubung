@@ -10,6 +10,7 @@ $val = (id) -> $$(id).value
 
 random = (array) ->
   array[Math.floor(Math.random() * array.length)]
+
 randomize_pitch = (pattern, pitches) ->
   pattern.replace(/c/g, () -> random(pitches))
 
@@ -29,7 +30,7 @@ generate = () ->
   bars_per_row = $val('bars_per_row')
 
   random_pitch = $$('random_pitch').checked
-  pitches = $val('pitches')
+  pitches = $val('pitches').match(/((?:_{0,2}|\^{0,2}|=)[a-hA-H][,']*)/g)
   patterns_per_bar = count / meter * pattern_length / pattern_count
   patterns_per_row = 12
   staffwidth = $val('staffwidth')
@@ -82,6 +83,10 @@ $$('download-png').addEventListener 'click', (e) ->
   e.preventDefault()
   downloadPNG()
 
+$$('download-abc').addEventListener 'click', (e) ->
+  e.preventDefault()
+  downloadABC()
+
 $$('generate').addEventListener 'click', (e) ->
   e.preventDefault()
   generate()
@@ -101,19 +106,27 @@ downloadPNG = () ->
       options
     )
 
-downloadSVG = () ->
-  svg = document.querySelector( "#paper > svg" )
-  xml  = new XMLSerializer().serializeToString(svg)
-  data = "data:image/svg+xml;utf8," + xml
+downloadTextContent = (data, filename, mime_type) ->
+  data_uri = "data:#{mime_type};utf8,#{encodeURIComponent(data)}"
   console.log data
   a = document.createElement('a')
-  a.href = data
-  a.download = filename('svg')
+  a.href = data_uri
+  a.download = filename
   a.target = '_blank'
 
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
+
+downloadSVG = () ->
+  svg = document.querySelector( "#paper > svg" )
+  xml  = new XMLSerializer().serializeToString(svg)
+  downloadTextContent(xml, filename('svg'), 'image/svg+xml')
+
+downloadABC = () ->
+  abcdata = $val('composition')
+  abcdata = ["%abc-2.1", abcdata].join "\n"
+  downloadTextContent(abcdata, filename('abc'), 'text/vnd.abc')
 
 setCaretPosition = (elem, caretPos) ->
   if (elem.createTextRange)

@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var coffee = require('gulp-coffee');
+var rename = require('gulp-rename');
 var inlinesource = require('gulp-inline-source');
 var browserSync = require('browser-sync').create();
 var reload      = browserSync.reload;
@@ -50,15 +51,25 @@ gulp.task('serve', ['html', 'assets'], function() {
 });
 
 gulp.task('assets', ['vendor', 'coffee', 'sass']);
+gulp.task('app', ['html', 'assets']);
 
-gulp.task('inlinesource', ['html', 'assets'], function() {
-  return gulp.src(src.html)
+gulp.task('inlinesource', ['app'], function() {
+  return gulp.src('build/app/index.html')
       .pipe(inlinesource({
         rootpath: 'build/app/'
       }))
-      .pipe(gulp.dest('build/standalone/'));
+      .pipe(gulp.dest('build/standalone'));
 });
 
-gulp.task('build', ['html', 'assets', 'inlinesource']);
+gulp.task('build', ['app', 'inlinesource']);
 
 gulp.task('default', ['serve']);
+
+gulp.task('deploy', ['build'], function(){
+  gulp.src('**/*', { base: 'build/app/' })
+    .pipe(gulp.dest('../leseübung-gh-pages/app/'))
+
+  gulp.src('build/standalone/index.html')
+    .pipe(rename('standalone.html'))
+    .pipe(gulp.dest('../leseübung-gh-pages/'))
+});

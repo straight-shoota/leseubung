@@ -1,0 +1,76 @@
+html, body {
+  font-family: Roboto, "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 11pt;
+  line-height: 1.4142; }
+
+label {
+  font-weight: bold;
+  color: #666666; }
+
+button {
+  background-color: #666666;
+  color: #FEFEFE;
+  padding: .5em 1.2em;
+  text-transform: uppercase;
+  font-weight: normal;
+  border: none;
+  border-radius: .1em;
+  cursor: pointer; }
+  button:hover {
+    background-color: #444444; }
+
+.render-area {
+  border-top: 2px solid #666666;
+  display: flex;
+  flex-wrap: wrap; }
+
+.render-area__extra {
+  max-width: 20em;
+  padding: 1em; }
+  .render-area__extra > button {
+    margin-bottom: .5em;
+    display: inline-block; }
+
+.composition {
+  width: 100%; }
+
+fieldset {
+  border: 1px solid #ccc;
+  margin-bottom: 1.4rem; }
+
+legend {
+  text-transform: uppercase;
+  color: #666666; }
+
+.fieldset {
+  display: flex;
+  flex-wrap: wrap; }
+  .fieldset > * {
+    flex-basis: 20em; }
+
+.field {
+  margin: .5em;
+  display: flex; }
+
+.field__label {
+  min-width: 8em;
+  text-align: right;
+  margin-right: .5em; }
+
+.field--patterns {
+  flex-direction: row;
+  flex-basis: 100%; }
+
+.form-actions {
+  margin: .5em;
+  margin-bottom: 1.5em; }
+
+button#generate {
+  font-size: 1.3em; }
+
+.composition__wrapper {
+  margin: 1.5em 0; }
+
+.composition__toggle {
+  cursor: pointer;
+  text-decoration: underline; }

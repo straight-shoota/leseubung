@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <title>Leseübung</title>
@@ -14,7 +14,7 @@
     <div class="fieldset fieldset--setup">
       <div class="field field--count">
         <div class="field__label">
-          <label for="count_count">Takt (M):</label>
+          <label for="count_count">Count (M):</label>
         </div>
         <div class="field__input">
           <input type="integer" id="count_count" size="2" value="4">/<input type="integer" id="meter_count" size="2" value="4">
@@ -23,7 +23,7 @@
 
       <div class="field field--unit_count">
         <div class="field__label">
-          <label for="unit_count">Zähleinheit (L):</label>
+          <label for="unit_count">Base Unit (L):</label>
         </div>
         <div class="field__input">
           1/<input type="integer" id="unit_count" size="2" value="8" class="align-left">
@@ -32,23 +32,23 @@
 
       <div class="field field--clef">
         <div class="field__label">
-          <label for="clef">Schlüssel:</label>
+          <label for="clef">Clef:</label>
         </div>
         <div class="field__input">
           <select id="clef">
-            <option value="perc">Schlagzeug</option>
-            <option value="treble" selected="selected">Violin</option>
-            <option value="alto">Alt</option>
+            <option value="perc">Perc</option>
+            <option value="treble" selected="selected">Treble</option>
+            <option value="alto">Alto</option>
             <option value="tenor">Tenor</option>
             <option value="bass">Bass</option>
-            <option value="none">Keiner</option>
+            <option value="none">None</option>
           </select>
         </div>
       </div>
 
       <div class="field field--key">
         <div class="field__label">
-          <label for="key">Tonart:</label>
+          <label for="key">Key:</label>
         </div>
         <div class="field__input">
           <input id="key" value="none" type="text" />
@@ -64,7 +64,7 @@
     <div class="fieldset fieldset--generator">
       <div class="field field--patterns">
         <div class="field__label">
-          <label for="patterns">Pattern:</label>
+          <label for="patterns">Patterns:</label>
         </div>
         <div class="field__input">
           <textarea id="patterns" cols="80" rows="15">
@@ -91,7 +91,7 @@ c/2c/2c/2c/2
       <div class="field field--pattern_count">
         <div class="field__label">
           <label for="pattern_count">
-            Patternlänge:
+            Pattern Length:
           </label>
         </div>
         <div class="field__input">
@@ -101,7 +101,7 @@ c/2c/2c/2c/2
 
       <div class="field field--row_count">
         <div class="field__label">
-          <label for="row_count">Zeilen:</label>
+          <label for="row_count">Rows:</label>
         </div>
         <div class="field__input">
           <input type="integer" id="row_count" size="2" value="5">
@@ -110,7 +110,7 @@ c/2c/2c/2c/2
 
       <div class="field field--bars_per_row">
         <div class="field__label">
-          <label for="bars_per_row">Takte pro Zeile:</label>
+          <label for="bars_per_row">Bars per Row:</label>
         </div>
         <div class="field__input">
           <input type="integer" id="bars_per_row" size="2" value="4" />
@@ -119,7 +119,7 @@ c/2c/2c/2c/2
 
       <div class="field field--staffwidth">
         <div class="field__label">
-          <label for="staffwidth">Grafikbreite:</label>
+          <label for="staffwidth">Width:</label>
         </div>
         <div class="field__input">
           <input type="integer" id="staffwidth" size="4" value="740" />px
@@ -130,13 +130,13 @@ c/2c/2c/2c/2
    </fieldset>
 
   <fieldset>
-    <legend>Töne</legend>
+    <legend>Tunes</legend>
 
     <div class="fieldset fieldset-tunes">
 
       <div class="field field--random_pitch">
         <div class="field__label">
-          <label for="random_pitch">Zufällige Tonhöhen:</label>
+          <label for="random_pitch">Randomize Pitch:</label>
         </div>
         <div class="field__input">
           <input type="checkbox" id="random_pitch" checked="checked">
@@ -145,7 +145,7 @@ c/2c/2c/2c/2
 
       <div class="field field--pitches">
         <div class="field__label">
-          <label for="pitches">Tonhöhen:</label>
+          <label for="pitches">Pitches:</label>
         </div>
         <div class="field__input">
           <input type="text" id="pitches" size="96" value="c | d | e | f | g | a | b" />
@@ -155,7 +155,7 @@ c/2c/2c/2c/2
   </fieldset>
 
   <div class="form-actions">
-    <button id="generate">Generieren</button>
+    <button id="generate">Generate</button>
   </div>
 </form>
 
@@ -163,14 +163,14 @@ c/2c/2c/2c/2
 <div class="render-area">
   <div id="paper"></div>
   <aside class="render-area__extra">
-    <button id="download-png">Als .PNG speichern</button>
-    <button id="download-svg">Als .SVG speichern</button>
-    <button id="download-abc">Als .ABC speichern</button>
+    <button id="download-png">Save As .PNG</button>
+    <button id="download-svg">Save As .SVG</button>
+    <button id="download-abc">Save As .ABC</button>
   </aside>
 </div>
 
 <div class="composition__wrapper">
-  <span class="composition__toggle" id="toggle-handler">ABC Noten anzeigen</span>
+  <span class="composition__toggle" id="toggle-handler">Show ABC Notes</span>
   <textarea class="composition" id="composition" cols="80" rows="15" style="display: none;"></textarea>
 </div>
 

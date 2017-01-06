@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Leseübung</title>
+    <link rel="stylesheet" href="styles/main.css" inline />
+  </head>
+  <body>
+    <h1>Leseübung</h1>
+    <form>
+  <fieldset>
+    <legend>Setup</legend>
+
+    <div class="fieldset fieldset--setup">
+      <div class="field field--count">
+        <div class="field__label">
+          <label for="count_count">Count (M):</label>
+        </div>
+        <div class="field__input">
+          <input type="integer" id="count_count" size="2" value="4">/<input type="integer" id="meter_count" size="2" value="4">
+        </div>
+      </div>
+
+      <div class="field field--unit_count">
+        <div class="field__label">
+          <label for="unit_count">Base Unit (L):</label>
+        </div>
+        <div class="field__input">
+          1/<input type="integer" id="unit_count" size="2" value="8" class="align-left">
+        </div>
+      </div>
+
+      <div class="field field--clef">
+        <div class="field__label">
+          <label for="clef">Clef:</label>
+        </div>
+        <div class="field__input">
+          <select id="clef">
+            <option value="perc">Perc</option>
+            <option value="treble" selected="selected">Treble</option>
+            <option value="alto">Alto</option>
+            <option value="tenor">Tenor</option>
+            <option value="bass">Bass</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field field--key">
+        <div class="field__label">
+          <label for="key">Key:</label>
+        </div>
+        <div class="field__input">
+          <input id="key" value="none" type="text" />
+        </div>
+      </div>
+    </div>
+
+  </fieldset>
+
+  <fieldset>
+    <legend>Generator</legend>
+
+    <div class="fieldset fieldset--generator">
+      <div class="field field--patterns">
+        <div class="field__label">
+          <label for="patterns">Patterns:</label>
+        </div>
+        <div class="field__input">
+          <textarea id="patterns" cols="80" rows="15">
+z2
+c2
+z/2c3/2
+zc
+z3/2c/2
+c/2c3/2
+cc
+c3/2c/2
+z/2c/2c
+z/2cc/2
+zc/2c/2
+c/2c/2c
+c/2cc/2
+cc/2c/2
+z/2c/2c/2c/2
+c/2c/2c/2c/2
+</textarea>
+        </div>
+      </div>
+
+      <div class="field field--pattern_count">
+        <div class="field__label">
+          <label for="pattern_count">
+            Pattern Length:
+          </label>
+        </div>
+        <div class="field__input">
+          <input type="integer" id="pattern_count" size="2" value="1">/<input type="integer" id="pattern_length" size="2" value="4">
+        </div>
+      </div>
+
+      <div class="field field--row_count">
+        <div class="field__label">
+          <label for="row_count">Rows:</label>
+        </div>
+        <div class="field__input">
+          <input type="integer" id="row_count" size="2" value="5">
+        </div>
+      </div>
+
+      <div class="field field--bars_per_row">
+        <div class="field__label">
+          <label for="bars_per_row">Bars per Row:</label>
+        </div>
+        <div class="field__input">
+          <input type="integer" id="bars_per_row" size="2" value="4" />
+        </div>
+      </div>
+
+      <div class="field field--staffwidth">
+        <div class="field__label">
+          <label for="staffwidth">Width:</label>
+        </div>
+        <div class="field__input">
+          <input type="integer" id="staffwidth" size="4" value="740" />px
+        </div>
+      </div>
+
+    </div>
+   </fieldset>
+
+  <fieldset>
+    <legend>Tunes</legend>
+
+    <div class="fieldset fieldset-tunes">
+
+      <div class="field field--random_pitch">
+        <div class="field__label">
+          <label for="random_pitch">Randomize Pitch:</label>
+        </div>
+        <div class="field__input">
+          <input type="checkbox" id="random_pitch" checked="checked">
+        </div>
+      </div>
+
+      <div class="field field--pitches">
+        <div class="field__label">
+          <label for="pitches">Pitches:</label>
+        </div>
+        <div class="field__input">
+          <input type="text" id="pitches" size="96" value="c | d | e | f | g | a | b" />
+        </div>
+      </div>
+
+  </fieldset>
+
+  <div class="form-actions">
+    <button id="generate">Generate</button>
+  </div>
+</form>
+
+<div id="warnings"></div>
+<div class="render-area">
+  <div id="paper"></div>
+  <aside class="render-area__extra">
+    <button id="download-png">Save As .PNG</button>
+    <button id="download-svg">Save As .SVG</button>
+    <button id="download-abc">Save As .ABC</button>
+  </aside>
+</div>
+
+<div class="composition__wrapper">
+  <span class="composition__toggle" id="toggle-handler">Show ABC Notes</span>
+  <textarea class="composition" id="composition" cols="80" rows="15" style="display: none;"></textarea>
+</div>
+
+<a href="http://abcnotation.com/wiki/abc:standard:v2.1">ABC Notation</a>
+<a href="https://github.com/paulrosen/abcjs">abcjs</a>
+  </body>
+
+  <script src="scripts/vendor/saveSvgAsPng.js" inline></script>
+  <script src="scripts/vendor/abcjs_editor_2.3-min.js" inline></script>
+  <script src="scripts/main.js" inline></script>
+</html>

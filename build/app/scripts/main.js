@@ -1,4 +1,4 @@
-var $$, $val, abc_editor, default_pitches, downloadABC, downloadPNG, downloadSVG, downloadTextContent, filename, generate, initializeToggle, random, randomize_pitch, setCaretPosition;
+var $$, $val, TUNES_REGEXP, TUNE_REGEXP, abc_editor, default_pitches, downloadABC, downloadPNG, downloadSVG, downloadTextContent, filename, generate, initializeToggle, normalizeBarString, random, randomize_pitch, setCaretPosition;
 
 abc_editor = new ABCJS.Editor("composition", {
   paper_id: "paper",
@@ -6,6 +6,10 @@ abc_editor = new ABCJS.Editor("composition", {
 });
 
 default_pitches = ['c', 'c', 'd', 'e', 'f', 'g', 'a', 'b'];
+
+TUNES_REGEXP = /((?:_{0,2}|\^{0,2}|=)[a-hA-H][,']*)/g;
+
+TUNE_REGEXP = /(_{0,2}|\^{0,2}|=)([a-gA-G])([,']*)/g;
 
 $$ = function(id) {
   return document.getElementById(id);
@@ -26,7 +30,7 @@ randomize_pitch = function(pattern, pitches) {
 };
 
 generate = function() {
-  var $clef, $composition, bar, bars_per_row, clef, count, front_matter, i, j, k, key, l, m, meter, o, pattern, pattern_count, pattern_length, patterns, patterns_per_bar, patterns_per_row, pitches, random_pitch, ref, ref1, ref2, row, rows, staffwidth, text, unit;
+  var $clef, $composition, bar, barString, bars_per_row, clef, count, front_matter, i, j, k, key, l, m, meter, o, pattern, pattern_count, pattern_length, patterns, patterns_per_bar, patterns_per_row, pitches, random_pitch, ref, ref1, ref2, row, rows, staffwidth, text, unit;
   patterns = $val('patterns').split(/\n/).filter(function(n) {
     return n.replace(/\s+/g, '').length > 0;
   });
@@ -42,7 +46,7 @@ generate = function() {
   rows = $val('row_count');
   bars_per_row = $val('bars_per_row');
   random_pitch = $$('random_pitch').checked;
-  pitches = $val('pitches').match(/((?:_{0,2}|\^{0,2}|=)[a-hA-H][,']*)/g);
+  pitches = $val('pitches').match(TUNES_REGEXP);
   patterns_per_bar = count / meter * pattern_length / pattern_count;
   patterns_per_row = 12;
   staffwidth = $val('staffwidth');
@@ -63,7 +67,9 @@ generate = function() {
         }
         bar.push(pattern);
       }
-      row.push(bar.join(' '));
+      barString = bar.join(' ');
+      barString = normalizeBarString(barString);
+      row.push(barString);
     }
     text.push("y " + (row.join(' | ')) + " |");
   }
@@ -164,4 +170,34 @@ setCaretPosition = function(elem, caretPos) {
       return elem.setSelectionRange(caretPos, caretPos);
     }
   }
+};
+
+normalizeBarString = function(s) {
+  var history, normalized, process, tune;
+  history = {};
+  process = function(s) {
+    var accidental, match, octave, ref, tune;
+    match = TUNE_REGEXP.exec(s);
+    if (!match) {
+      return s;
+    }
+    ref = [match[1], match[2], match[3]], accidental = ref[0], tune = ref[1], octave = ref[2];
+    if (history[tune] === accidental) {
+      accidental = '';
+    }
+    history[tune] = accidental;
+    return [accidental, tune, octave].join('');
+  };
+  normalized = ((function() {
+    var l, len, ref, results;
+    ref = s.split(TUNES_REGEXP);
+    results = [];
+    for (l = 0, len = ref.length; l < len; l++) {
+      tune = ref[l];
+      results.push(process(tune));
+    }
+    return results;
+  })()).join('');
+  console.log([s, normalized]);
+  return normalized;
 };

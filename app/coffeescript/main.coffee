@@ -3,6 +3,8 @@ abc_editor = new ABCJS.Editor("composition", {
   warnings_id: "warnings"
 })
 default_pitches = ['c', 'c', 'd', 'e', 'f', 'g', 'a', 'b']
+TUNES_REGEXP = /((?:_{0,2}|\^{0,2}|=)[a-hA-H][,']*)/g
+TUNE_REGEXP = /(_{0,2}|\^{0,2}|=)([a-gA-G])([,']*)/g
 
 # helper
 $$ = (id) -> document.getElementById(id)
@@ -30,7 +32,7 @@ generate = () ->
   bars_per_row = $val('bars_per_row')
 
   random_pitch = $$('random_pitch').checked
-  pitches = $val('pitches').match(/((?:_{0,2}|\^{0,2}|=)[a-hA-H][,']*)/g)
+  pitches = $val('pitches').match(TUNES_REGEXP)
   patterns_per_bar = count / meter * pattern_length / pattern_count
   patterns_per_row = 12
   staffwidth = $val('staffwidth')
@@ -50,7 +52,10 @@ generate = () ->
         if(random_pitch)
           pattern = randomize_pitch(pattern, pitches)
         bar.push(pattern)
-      row.push(bar.join(' '))
+
+      barString = bar.join(' ')
+      barString = normalizeBarString(barString)
+      row.push(barString)
     # empty space at begin of row,
     # beam at end
     text.push("y #{row.join(' | ')} |")
@@ -135,3 +140,22 @@ setCaretPosition = (elem, caretPos) ->
   else
     if (elem.selectionStart != undefined)
       elem.setSelectionRange(caretPos, caretPos)
+
+normalizeBarString = (s) ->
+  history = {}
+
+  process = (s) ->
+    match = TUNE_REGEXP.exec(s)
+    # next if it is a filler betwen tunes (note length, pause etc.)
+    return s unless match
+
+    [accidental, tune, octave] = [match[1], match[2], match[3]]
+    accidental = '' if history[tune] == accidental
+
+    history[tune] = accidental
+    #console.log tune, [origAcc, accidental, tune, octave], history
+    [accidental, tune, octave].join('')
+
+  normalized = (process(tune) for tune in s.split(TUNES_REGEXP)).join('')
+  console.log [s, normalized]
+  normalized

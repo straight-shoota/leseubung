@@ -138,7 +138,7 @@ setCaretPosition = (elem, caretPos) ->
     range = elem.createTextRange()
     range.move('character', caretPos)
   else
-    if (elem.selectionStart != undefined)
+    if (elem.selectionStart != undefined && elem.offsetParent != null)
       elem.setSelectionRange(caretPos, caretPos)
 
 normalizeBarString = (s) ->

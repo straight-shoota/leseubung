@@ -166,7 +166,7 @@ setCaretPosition = function(elem, caretPos) {
     range = elem.createTextRange();
     return range.move('character', caretPos);
   } else {
-    if (elem.selectionStart !== void 0) {
+    if (elem.selectionStart !== void 0 && elem.offsetParent !== null) {
       return elem.setSelectionRange(caretPos, caretPos);
     }
   }

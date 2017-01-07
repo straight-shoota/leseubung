@@ -1,4 +1,4 @@
-var $$, $val, TUNES_REGEXP, TUNE_REGEXP, abc_editor, default_pitches, downloadABC, downloadPNG, downloadSVG, downloadTextContent, filename, generate, initializeToggle, normalizeBarString, random, randomize_pitch, setCaretPosition;
+var $$, $val, TUNES_REGEXP, TUNE_REGEXP, abc_editor, default_pitches, downloadABC, downloadPNG, downloadSVG, downloadTextContent, filename, generate, initialize, initializeToggle, initializeWidthSetting, normalizeBarString, random, randomize_pitch, setCaretPosition;
 
 abc_editor = new ABCJS.Editor("composition", {
   paper_id: "paper",
@@ -80,6 +80,11 @@ generate = function() {
   return abc_editor.fireChanged();
 };
 
+initialize = function() {
+  initializeToggle();
+  return initializeWidthSetting();
+};
+
 initializeToggle = function() {
   return $$('toggle-handler').addEventListener('click', function() {
     var $e;
@@ -94,7 +99,13 @@ initializeToggle = function() {
   });
 };
 
-window.addEventListener('load', initializeToggle);
+initializeWidthSetting = function() {
+  if (window.innerWidth > 1600) {
+    return $$('staffwidth').value = 1100;
+  }
+};
+
+window.addEventListener('load', initialize);
 
 window.addEventListener('load', generate);
 
@@ -114,6 +125,11 @@ $$('download-abc').addEventListener('click', function(e) {
 });
 
 $$('generate').addEventListener('click', function(e) {
+  e.preventDefault();
+  return generate();
+});
+
+$$('leseübung-form').addEventListener('submit', function(e) {
   e.preventDefault();
   return generate();
 });
@@ -166,7 +182,7 @@ setCaretPosition = function(elem, caretPos) {
     range = elem.createTextRange();
     return range.move('character', caretPos);
   } else {
-    if (elem.selectionStart !== void 0) {
+    if (elem.selectionStart !== void 0 && elem.offsetParent !== null) {
       return elem.setSelectionRange(caretPos, caretPos);
     }
   }

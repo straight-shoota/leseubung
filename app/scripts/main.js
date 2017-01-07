@@ -191,12 +191,13 @@ setCaretPosition = function(elem, caretPos) {
 var normalizeBarString;
 
 normalizeBarString = function(s, key) {
-  var EMPTY_HISTORY, KEY_ACCIDENTALS, history, i, len, process, processed, ref, tune, tuneRegexp, tunes, tunesRegexp;
+  var EMPTY_HISTORY, KEY_ACCIDENTALS, expAccidentals, history, i, j, keyMatch, keyRegexp, len, len1, process, processed, ref, ref1, tune, tuneRegexp, tunes, tunesRegexp;
   if (key == null) {
     key = null;
   }
   tunesRegexp = /((?:_{0,2}|\^{0,2}|=)[a-hA-H][,']*)/g;
-  tuneRegexp = /(_{0,2}|\^{0,2}|=)([a-gA-G])([,']*)/g;
+  tuneRegexp = /(_{0,2}|\^{0,2}|=)([a-gA-G])([,']*)/;
+  keyRegexp = /(.*) exp (.*)/;
   EMPTY_HISTORY = {
     C: '=',
     D: '=',
@@ -212,13 +213,13 @@ normalizeBarString = function(s, key) {
     'A': '^F^C^G',
     'E': '^F^C^G^D',
     'H': '^F^C^G^D^A',
-    '^F': '^F^C^G^D^A',
+    'F#': '^F^C^G^D^A',
     'F': '_B',
     'B': '_B_E',
-    '_E': '_B_E_A',
-    '_A': '_B_E_A_D',
-    '_D': '_B_E_A_D_G',
-    '_G': '_B_E_A_D_G_C'
+    'Eb': '_B_E_A',
+    'Ab': '_B_E_A_D',
+    'Db': '_B_E_A_D_G',
+    'Gb': '_B_E_A_D_G_C'
   };
   tunes = s.split(tunesRegexp);
   key || (key = 'C');
@@ -237,6 +238,12 @@ normalizeBarString = function(s, key) {
     history[tune.toUpperCase()] = origAcc;
     return [accidental, tune, octave].join('');
   };
+  keyMatch = keyRegexp.exec(key);
+  expAccidentals = '';
+  if (keyMatch) {
+    key = keyMatch[1];
+    expAccidentals = keyMatch[2];
+  }
   if (KEY_ACCIDENTALS[key]) {
     ref = KEY_ACCIDENTALS[key].split(tunesRegexp);
     for (i = 0, len = ref.length; i < len; i++) {
@@ -244,11 +251,16 @@ normalizeBarString = function(s, key) {
       process(tune);
     }
   }
+  ref1 = expAccidentals.split(tunesRegexp);
+  for (j = 0, len1 = ref1.length; j < len1; j++) {
+    tune = ref1[j];
+    process(tune);
+  }
   processed = (function() {
-    var j, len1, results;
+    var k, len2, results;
     results = [];
-    for (j = 0, len1 = tunes.length; j < len1; j++) {
-      tune = tunes[j];
+    for (k = 0, len2 = tunes.length; k < len2; k++) {
+      tune = tunes[k];
       results.push(process(tune));
     }
     return results;

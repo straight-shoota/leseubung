@@ -7,7 +7,7 @@ assert = (a, b) ->
 
 
 assertNormalize = (dirty, expect, key=null) ->
-  console.log "normalize #{dirty}"
+  console.log "normalize #{dirty} key #{key}"
   assert normalize_bar_string(dirty, key), expect
 
 # no change
@@ -21,11 +21,13 @@ assertNormalize 'A ^A ^A', 'A ^A A'
 assertNormalize 'A ^A A ^A', 'A ^A A ^A'
 assertNormalize '^A =A', '^A =A'
 assertNormalize '=A =A', 'A A'
-assertNormalize '=A =A', '=A A', '_E'
+assertNormalize '=A =A', '=A A', 'Eb'
 assertNormalize '^F ^F ^F', '^F F F'
 assertNormalize '^F ^F ^F', 'F F F', 'G'
 assertNormalize '^F', 'F', 'G'
+assertNormalize '^F', '^F', 'G#'
 
+assertNormalize '^F =F ^F ^F _B _B', 'F =F ^F F _B B', 'C exp ^f _d ^e'
 
 #assertNormalize 'y G/2C/2G G/2=F=F/2 z/2G/2_B ^FC', 'y G/2C/2G G/2=F=F/2 z/2G/2_B ^FC'
 #assertNormalize '=F/2_E3/2 z_E z=F/2_E/2 z2', '=F/2_E3/2 z_E z=F/2_E/2 z2'

@@ -12,7 +12,7 @@ var exec = require('child_process').exec;
 var src = {
   html: 'app/*.html',
   scss: 'app/scss/**/*.scss',
-  coffee: 'app/coffeescript/*.coffee'
+  coffee: 'app/coffeescript/**/*.coffee'
 }
 
 gulp.task('sass', function() {

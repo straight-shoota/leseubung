@@ -55,11 +55,17 @@ gulp.task('assets', ['vendor', 'coffee', 'sass']);
 gulp.task('app', ['html', 'assets']);
 
 gulp.task('standalone', ['app'], function() {
-  return gulp.src('build/app/index.html')
+  gulp.src('build/app/index.html')
       .pipe(inlinesource({
         rootpath: 'build/app/'
       }))
       .pipe(rename('standalone.html'))
+      .pipe(gulp.dest('build/'));
+  gulp.src('build/app/index.en.html')
+      .pipe(inlinesource({
+        rootpath: 'build/app/'
+      }))
+      .pipe(rename('standalone.en.html'))
       .pipe(gulp.dest('build/'));
 });
 
@@ -76,5 +82,5 @@ gulp.task('deploy', ['build'], function(){
     .pipe(gulp.dest(deployDest))
 
   gulp.src('doc/**/*')
-    .pipe(gulp.dest(deployDest))
+    .pipe(gulp.dest(deployDest + "/doc"))
 });

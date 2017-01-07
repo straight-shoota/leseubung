@@ -1,30 +1,33 @@
-# [Leseübung](https://github.com/straight-shoota/leseubung)
+# Leseübung
 
 This is a generator for musical note sequences to train recognition and instrumentation of musical compositions.
 It uses [ABC Notation](http://abcnotation.com/wiki/abc:standard:v2.1) to define short patterns.
 
-**[Run app](https://straight-shoota.github.io/leseubung/standalone.html)**
+* **[Run app](https://straight-shoota.github.io/leseubung/standalone.en.html)**
+* **[Run app (German)](https://straight-shoota.github.io/leseubung/standalone.html)**
+* [Docs](https://straight-shoota.github.io/leseubung/doc/)
+* [github:straight-shoota/leseubung](https://github.com/straight-shoota/leseubung)
 
-# Usage
+## Usage
 
 You need to install [nodejs](https://nodejs.org) (including `npm`).
 Then inside the repository run `npm install` to install dependecies.
 
-## Server
+### Server
 `grunt serve` creates the app and serves it on localhost.
 
-## Build
+### Build
 `grund build` creates the app in the `build/` folder:
 
 * `build/standalone.html` contains an HTML file with inlined assets, ready to use without a webserver or internet connection.
 * `build/app` contains the app in multiple files.
 
-# Utilized Libraries:
+## Utilized Libraries:
 
 * [abcjs](https://github.com/paulrosen/abcjs) - music rendering
 * [saveSvgAsPng](https://github.com/exupero/saveSvgAsPng) - export to PNG
 
-# License
+## License
 
 Copyright (c) 2017 Johannes Müller <jowemue@gmail.com>
 

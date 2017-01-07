@@ -54,7 +54,7 @@ generate = () ->
         bar.push(pattern)
 
       barString = bar.join(' ')
-      barString = normalizeBarString(barString)
+      barString = normalizeBarString(barString, key)
       row.push(barString)
     # empty space at begin of row,
     # beam at end
@@ -151,22 +151,3 @@ setCaretPosition = (elem, caretPos) ->
   else
     if (elem.selectionStart != undefined && elem.offsetParent != null)
       elem.setSelectionRange(caretPos, caretPos)
-
-normalizeBarString = (s) ->
-  history = {}
-
-  process = (s) ->
-    match = TUNE_REGEXP.exec(s)
-    # next if it is a filler betwen tunes (note length, pause etc.)
-    return s unless match
-
-    [accidental, tune, octave] = [match[1], match[2], match[3]]
-    accidental = '' if history[tune] == accidental
-
-    history[tune] = accidental
-    #console.log tune, [origAcc, accidental, tune, octave], history
-    [accidental, tune, octave].join('')
-
-  normalized = (process(tune) for tune in s.split(TUNES_REGEXP)).join('')
-  console.log [s, normalized]
-  normalized

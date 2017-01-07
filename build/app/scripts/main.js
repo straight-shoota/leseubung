@@ -1,4 +1,4 @@
-var $$, $val, TUNES_REGEXP, TUNE_REGEXP, abc_editor, default_pitches, downloadABC, downloadPNG, downloadSVG, downloadTextContent, filename, generate, initialize, initializeToggle, initializeWidthSetting, normalizeBarString, random, randomize_pitch, setCaretPosition;
+var $$, $val, TUNES_REGEXP, TUNE_REGEXP, abc_editor, default_pitches, downloadABC, downloadPNG, downloadSVG, downloadTextContent, filename, generate, initialize, initializeToggle, initializeWidthSetting, random, randomize_pitch, setCaretPosition;
 
 abc_editor = new ABCJS.Editor("composition", {
   paper_id: "paper",
@@ -68,7 +68,7 @@ generate = function() {
         bar.push(pattern);
       }
       barString = bar.join(' ');
-      barString = normalizeBarString(barString);
+      barString = normalizeBarString(barString, key);
       row.push(barString);
     }
     text.push("y " + (row.join(' | ')) + " |");
@@ -188,32 +188,74 @@ setCaretPosition = function(elem, caretPos) {
   }
 };
 
-normalizeBarString = function(s) {
-  var history, normalized, process, tune;
-  history = {};
+var normalizeBarString;
+
+normalizeBarString = function(s, key) {
+  var EMPTY_HISTORY, KEY_ACCIDENTALS, history, i, len, process, processed, ref, tune, tuneRegexp, tunes, tunesRegexp;
+  if (key == null) {
+    key = null;
+  }
+  tunesRegexp = /((?:_{0,2}|\^{0,2}|=)[a-hA-H][,']*)/g;
+  tuneRegexp = /(_{0,2}|\^{0,2}|=)([a-gA-G])([,']*)/g;
+  EMPTY_HISTORY = {
+    C: '=',
+    D: '=',
+    E: '=',
+    F: '=',
+    G: '=',
+    A: '=',
+    B: '='
+  };
+  KEY_ACCIDENTALS = {
+    'G': '^F',
+    'D': '^F^C',
+    'A': '^F^C^G',
+    'E': '^F^C^G^D',
+    'H': '^F^C^G^D^A',
+    '^F': '^F^C^G^D^A',
+    'F': '_B',
+    'B': '_B_E',
+    '_E': '_B_E_A',
+    '_A': '_B_E_A_D',
+    '_D': '_B_E_A_D_G',
+    '_G': '_B_E_A_D_G_C'
+  };
+  tunes = s.split(tunesRegexp);
+  key || (key = 'C');
+  history = EMPTY_HISTORY;
   process = function(s) {
-    var accidental, match, octave, ref, tune;
-    match = TUNE_REGEXP.exec(s);
+    var accidental, match, octave, origAcc, ref, tune;
+    match = tuneRegexp.exec(s);
     if (!match) {
       return s;
     }
     ref = [match[1], match[2], match[3]], accidental = ref[0], tune = ref[1], octave = ref[2];
-    if (history[tune] === accidental) {
+    origAcc = accidental;
+    if (history[tune.toUpperCase()] === accidental) {
       accidental = '';
     }
-    history[tune] = accidental;
+    history[tune.toUpperCase()] = origAcc;
     return [accidental, tune, octave].join('');
   };
-  normalized = ((function() {
-    var l, len, ref, results;
-    ref = s.split(TUNES_REGEXP);
+  if (KEY_ACCIDENTALS[key]) {
+    ref = KEY_ACCIDENTALS[key].split(tunesRegexp);
+    for (i = 0, len = ref.length; i < len; i++) {
+      tune = ref[i];
+      process(tune);
+    }
+  }
+  processed = (function() {
+    var j, len1, results;
     results = [];
-    for (l = 0, len = ref.length; l < len; l++) {
-      tune = ref[l];
+    for (j = 0, len1 = tunes.length; j < len1; j++) {
+      tune = tunes[j];
       results.push(process(tune));
     }
     return results;
-  })()).join('');
-  console.log([s, normalized]);
-  return normalized;
+  })();
+  return processed.join('');
 };
+
+if (module !== void 0) {
+  module.exports = normalizeBarString;
+}

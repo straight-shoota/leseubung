@@ -2,10 +2,12 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var coffee = require('gulp-coffee');
 var rename = require('gulp-rename');
+var concat  = require('gulp-concat');
 var inlinesource = require('gulp-inline-source');
 var browserSync = require('browser-sync').create();
 var reload      = browserSync.reload;
 var deployDest = '../leseübung-gh-pages';
+var exec = require('child_process').exec;
 
 var src = {
   html: 'app/*.html',
@@ -21,8 +23,9 @@ gulp.task('sass', function() {
 });
 
 gulp.task('coffee', function() {
-  gulp.src('app/coffeescript/*.coffee', { sourcemaps: true })
+  gulp.src('app/coffeescript/**/*.coffee', { sourcemaps: true })
     .pipe(coffee({bare: true}))
+    .pipe(concat('main.js'))
     .pipe(gulp.dest('build/app/scripts/'))
     .pipe(reload({ stream:true }));
 });
@@ -83,4 +86,12 @@ gulp.task('deploy', ['build'], function(){
 
   gulp.src('doc/**/*')
     .pipe(gulp.dest(deployDest + "/doc"))
+});
+
+gulp.task('test', [], function(cb){
+  exec("coffee -r '../app/coffeescript/lib/normalize_bar_string.coffee' test/normalizer_test.coffee", function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
 });

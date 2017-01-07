@@ -67,6 +67,10 @@ generate = () ->
   setCaretPosition($composition, 0)
   abc_editor.fireChanged()
 
+initialize = () ->
+  initializeToggle()
+  initializeWidthSetting()
+
 initializeToggle = () ->
   $$('toggle-handler').addEventListener 'click', () ->
     $e = $$('composition')
@@ -77,7 +81,10 @@ initializeToggle = () ->
       $e.style.display = 'block'
       $$('toggle-handler').innerHTML = 'ABC Noten verbergen'
 
-window.addEventListener('load', initializeToggle)
+initializeWidthSetting = () ->
+  $$('staffwidth').value = 1100 if window.innerWidth > 1600
+
+window.addEventListener('load', initialize)
 window.addEventListener('load', generate)
 
 $$('download-svg').addEventListener 'click', (e) ->
@@ -93,6 +100,10 @@ $$('download-abc').addEventListener 'click', (e) ->
   downloadABC()
 
 $$('generate').addEventListener 'click', (e) ->
+  e.preventDefault()
+  generate()
+
+$$('leseübung-form').addEventListener 'submit', (e) ->
   e.preventDefault()
   generate()
 

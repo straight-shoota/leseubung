@@ -93,6 +93,16 @@ initializeWidthSetting = function() {
 
 window.addEventListener('load', initialize);
 
+window.addEventListener('popstate', function(popstate) {
+  var settings;
+  settings = popstate.state;
+  if (settings === void 0) {
+    return;
+  }
+  applySettings(settings);
+  return generate();
+});
+
 $$('download-svg').addEventListener('click', function(e) {
   e.preventDefault();
   return downloadSVG();

@@ -30,45 +30,28 @@ randomize_pitch = function(pattern, pitches) {
 };
 
 generate = function() {
-  var $clef, $composition, bar, barString, bars_per_row, clef, count, front_matter, i, j, k, key, l, m, meter, o, pattern, pattern_count, pattern_length, patterns, patterns_per_bar, patterns_per_row, pitches, random_pitch, ref, ref1, ref2, row, rows, staffwidth, text, unit;
-  patterns = $val('patterns').split(/\n/).filter(function(n) {
-    return n.replace(/\s+/g, '').length > 0;
-  });
-  count = $val('count_count');
-  meter = $val('meter_count');
-  $clef = $$('clef');
-  clef = $clef.options[$clef.selectedIndex].value;
-  console.log(clef);
-  key = $val('key');
-  unit = $val('unit_count');
-  pattern_length = $val('pattern_length');
-  pattern_count = $val('pattern_count');
-  rows = $val('row_count');
-  bars_per_row = $val('bars_per_row');
-  random_pitch = $$('random_pitch').checked;
-  pitches = $val('pitches').match(TUNES_REGEXP);
-  patterns_per_bar = count / meter * pattern_length / pattern_count;
-  patterns_per_row = 12;
-  staffwidth = $val('staffwidth');
+  var $composition, bar, barString, front_matter, i, j, k, l, m, n, pattern, ref, ref1, ref2, row, settings, text;
+  settings = readSettings();
+  console.log("readSettings", settings);
   abc_editor.paramChanged({
     staffwidth: staffwidth
   });
-  front_matter = "M:" + count + "/" + meter + "\nL:1/" + unit + "\nK:" + key + " clef=" + clef;
+  front_matter = "M:" + settings.count + "/" + settings.meter + "\nL:1/" + settings.unit + "\nK:" + settings.key + " clef=" + settings.clef;
   text = [front_matter];
-  console.log(patterns);
-  for (i = l = 1, ref = rows; 1 <= ref ? l <= ref : l >= ref; i = 1 <= ref ? ++l : --l) {
+  console.log(settings.patterns);
+  for (i = l = 1, ref = settings.rows; 1 <= ref ? l <= ref : l >= ref; i = 1 <= ref ? ++l : --l) {
     row = [];
-    for (j = m = 1, ref1 = bars_per_row; 1 <= ref1 ? m <= ref1 : m >= ref1; j = 1 <= ref1 ? ++m : --m) {
+    for (j = m = 1, ref1 = settings.bars_per_row; 1 <= ref1 ? m <= ref1 : m >= ref1; j = 1 <= ref1 ? ++m : --m) {
       bar = [];
-      for (k = o = 1, ref2 = patterns_per_bar; 1 <= ref2 ? o <= ref2 : o >= ref2; k = 1 <= ref2 ? ++o : --o) {
-        pattern = random(patterns);
-        if (random_pitch) {
-          pattern = randomize_pitch(pattern, pitches);
+      for (k = n = 1, ref2 = settings.patterns_per_bar; 1 <= ref2 ? n <= ref2 : n >= ref2; k = 1 <= ref2 ? ++n : --n) {
+        pattern = random(settings.patterns);
+        if (settings.random_pitch) {
+          pattern = randomize_pitch(pattern, settings.pitches);
         }
         bar.push(pattern);
       }
       barString = bar.join(' ');
-      barString = normalizeBarString(barString, key);
+      barString = normalizeBarString(barString, settings.key);
       row.push(barString);
     }
     text.push("y " + (row.join(' | ')) + " |");
@@ -77,12 +60,15 @@ generate = function() {
   $composition = $$('composition');
   $composition.value = (text.join("\n")) + "|";
   setCaretPosition($composition, 0);
-  return abc_editor.fireChanged();
+  abc_editor.fireChanged();
+  return storeSettingsToLocation(settings);
 };
 
 initialize = function() {
   initializeToggle();
-  return initializeWidthSetting();
+  initializeWidthSetting();
+  initializeSettings();
+  return generate();
 };
 
 initializeToggle = function() {
@@ -106,8 +92,6 @@ initializeWidthSetting = function() {
 };
 
 window.addEventListener('load', initialize);
-
-window.addEventListener('load', generate);
 
 $$('download-svg').addEventListener('click', function(e) {
   e.preventDefault();
@@ -268,6 +252,75 @@ normalizeBarString = function(s, key) {
   return processed.join('');
 };
 
-if (module !== void 0) {
-  module.exports = normalizeBarString;
-}
+var applySettings, initializeSettings, loadSettingsFromLocation, readSettings, storeSettingsToLocation;
+
+storeSettingsToLocation = function(settings) {
+  var base, settings_hash, url;
+  base = window.location.href.replace(/#.*/, "");
+  settings_hash = Object.keys(settings).map(function(key) {
+    return key + '=' + settings[key];
+  }).join('&');
+  url = base + "#" + settings_hash;
+  console.log(base, url);
+  return history.pushState(settings, "Leseübung", url);
+};
+
+loadSettingsFromLocation = function() {
+  var result;
+  result = {};
+  location.hash.substring(1).split("&").forEach(function(part) {
+    var item;
+    item = part.split("=");
+    return result[item[0]] = decodeURIComponent(item[1]);
+  });
+  return result;
+};
+
+initializeSettings = function() {
+  var settings;
+  if (location.hash !== "") {
+    settings = loadSettingsFromLocation();
+    console.log("loaded settings", settings);
+    return applySettings(settings);
+  }
+};
+
+readSettings = function() {
+  var $clef, settings;
+  settings = {};
+  settings.patterns = $val('patterns').split(/\n/).filter(function(n) {
+    return n.replace(/\s+/g, '').length > 0;
+  });
+  settings.count = $val('count_count');
+  settings.meter = $val('meter_count');
+  $clef = $$('clef');
+  settings.clef = $clef.options[$clef.selectedIndex].value;
+  settings.key = $val('key');
+  settings.unit = $val('unit_count');
+  settings.pattern_length = $val('pattern_length');
+  settings.pattern_count = $val('pattern_count');
+  settings.rows = $val('row_count');
+  settings.bars_per_row = $val('bars_per_row');
+  settings.random_pitch = $$('random_pitch').checked;
+  settings.pitches = $val('pitches').match(TUNES_REGEXP);
+  settings.patterns_per_bar = settings.count / settings.meter * settings.pattern_length / settings.pattern_count;
+  settings.patterns_per_row = 12;
+  settings.staffwidth = $val('staffwidth');
+  return settings;
+};
+
+applySettings = function(settings) {
+  $$('patterns').value = settings.patterns;
+  $$('count_count').value = settings.count;
+  $$('meter_count').value = settings.meter;
+  $$('clef').value = settings.clef;
+  $$('key').value = settings.key;
+  $$('unit_count').value = settings.unit;
+  $$('pattern_length').value = settings.pattern_length;
+  $$('pattern_count').value = settings.pattern_count;
+  $$('row_count').value = settings.rows;
+  $$('bars_per_row').value = settings.bars_per_row;
+  $$('random_pitch').value = settings.random_pitch;
+  $$('pitches').value = settings.pitches;
+  return $$('staffwidth').value = settings.staffwidth;
+};

@@ -12,7 +12,8 @@ var exec = require('child_process').exec;
 var src = {
   html: 'app/*.html',
   scss: 'app/scss/**/*.scss',
-  coffee: 'app/coffeescript/**/*.coffee'
+  coffee: 'app/coffeescript/**/*.coffee',
+  javascript: 'app/javascript/*.js'
 }
 
 gulp.task('sass', function() {
@@ -28,6 +29,10 @@ gulp.task('coffee', function() {
     .pipe(concat('main.js'))
     .pipe(gulp.dest('build/app/scripts/'))
     .pipe(reload({ stream:true }));
+});
+gulp.task('javascript', function() {
+  gulp.src('app/javascript/*')
+    .pipe(gulp.dest('build/app/scripts'))
 });
 
 gulp.task('vendor', function() {
@@ -51,10 +56,11 @@ gulp.task('serve', ['html', 'assets'], function() {
   // watch Sass files for changes, run the Sass preprocessor with the 'sass' task and reload
   gulp.watch(src.scss, ['sass']);
   gulp.watch(src.coffee, ['coffee']);
+  gulp.watch(src.javascript, ['javascript']);
   gulp.watch(src.html, ['html']).on('change', reload)
 });
 
-gulp.task('assets', ['vendor', 'coffee', 'sass']);
+gulp.task('assets', ['vendor', 'coffee', 'javascript', 'sass']);
 gulp.task('app', ['html', 'assets']);
 
 gulp.task('standalone', ['app'], function() {
@@ -69,6 +75,12 @@ gulp.task('standalone', ['app'], function() {
         rootpath: 'build/app/'
       }))
       .pipe(rename('standalone.en.html'))
+      .pipe(gulp.dest('build/'));
+  gulp.src('build/app/metronome.html')
+      .pipe(inlinesource({
+        rootpath: 'build/app/'
+      }))
+      .pipe(rename('metronome.html'))
       .pipe(gulp.dest('build/'));
 });
 

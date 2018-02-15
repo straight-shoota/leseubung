@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Metronome</title>
+    <style>body,html{font-family:Roboto,"Helvetica Neue","Helvetica","Arial",sans-serif;font-size:11pt;line-height:1.4142}label{font-weight:700;color:#666}button,legend{text-transform:uppercase}button{background-color:#666;padding:.5em 1.2em;font-weight:400;border:none;border-radius:.1em;cursor:pointer;color:#fefefe}button:hover{background-color:#444}.render-area{border-top:2px solid #666;display:flex;flex-wrap:wrap}.render-area__extra{max-width:20em;padding:1em}.render-area__extra>button{margin-bottom:.5em;display:inline-block}.composition{width:100%}fieldset{border:1px solid #ccc;margin-bottom:1.4rem}legend{color:#666}input[type=integer],input[type=text],select,textarea{padding:.3em;font-size:1.1em;font-weight:700;color:#333;border:1px solid #ddd;border-radius:.2em}input[type=integer]:not(:nth-of-type(2)):not(.align-left){text-align:right}.fieldset{display:flex;flex-wrap:wrap}.fieldset>*{flex-basis:20em}.field{margin:.5em;display:flex}.field:not(.field--patterns){align-items:baseline}.field__label{min-width:8em;text-align:right;margin-right:.5em}.field--patterns{flex-direction:row;flex-basis:100%}.form-actions{margin:.5em .5em 1.5em}button#generate{font-size:1.3em}.composition__wrapper{margin:1.5em 0}.composition__toggle{cursor:pointer;text-decoration:underline}</style>
+    <style>
+    .click-indicator {
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      background-color: grey;
+    }
+    </style>
+  </head>
+  <body>
+    <h1>Metronome</h1>
+    <form id="metronome-form">
+  <fieldset>
+    <legend>Setup</legend>
+
+    <div class="fieldset fieldset--setup">
+      <div class="field field--tempo">
+        <div class="field__label">
+          <label for="tempo">Tempo (BPM):</label>
+        </div>
+        <div class="field__input">
+          <input type="integer" id="tempo" size="3" value="80" minValue="40" maxValue="250">
+        </div>
+      </div>
+
+      <div class="field field--indicator">
+        <div class="field_input">
+            <div class="click-indicator"></div>
+        </div>
+      </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Playback</legend>
+
+    <div class="fieldset fieldset--generator">
+      <div class="field field--skip-rate">
+        <div class="field__label">
+          <label for="skip-rate">Skip Rate:</label>
+        </div>
+        <div class="field__input">
+          <input id="skip-rate" type="integer" size="3" min="1" max="100" value="0" >%
+        </div>
+      </div>
+
+      <!--div class="field field--skew-tempo">
+        <div class="field__label">
+          <label for="skew-tempo">Skew Tempo:</label>
+        </div>
+        <div class="field__input">
+          <input type="checkbox" id="skew-tempo">
+        </div>
+      </div-->
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <button id="start-stop">Start</button>
+  </div>
+</form>
+  </body>
+
+  <script>function Metronome(){this.settings={tempo:80,skip_rate:0},this.context=new AudioContext,this.clickIndicator=document.querySelector(".click-indicator"),this.tick=function(){Math.random()>=this.settings.skip_rate&&this.playClick();var t=this,e=36e3/this.settings.tempo;this.timeout=setTimeout(function(){t.tick()},e)},this.stop=function(){clearTimeout(this.timeout)},this.playClick=function(){delay=.8;var t=this.context.createOscillator();t.type="sine",t.frequency=880,t.start(0);var e=this.context.createGain();t.connect(e),e.connect(this.context.destination),this.clickIndicator.style.backgroundColor="red";var n=this.clickIndicator;setTimeout(function(){n.style.backgroundColor="grey"},100*delay*2),e.gain.exponentialRampToValueAtTime(1e-5,this.context.currentTime+delay)}}function $$(t){return document.getElementById(t)}function $val(t){return $$(t).value}readSettings=function(){window.metronome.settings.tempo=$val("tempo"),window.metronome.settings.skip_rate=$val("skip-rate")/100},window.metronome=new Metronome,initialize=function(){readSettings(),$$("tempo").addEventListener("change",readSettings),$$("skip-rate").addEventListener("change",readSettings),$button=$$("start-stop"),$button.addEventListener("click",function(t){return t.preventDefault(),"Start"==$button.innerHTML?(window.metronome.tick(),$button.innerHTML="Stop"):(window.metronome.stop(),$button.innerHTML="Start"),!1}),$$("metronome-form").addEventListener("submit",function(t){return t.preventDefault(),readSettings(),!1})},window.addEventListener("load",initialize);</script>
+</html>

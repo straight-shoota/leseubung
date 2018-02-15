@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Metronome</title>
+    <link rel="stylesheet" href="styles/main.css" inline />
+    <style>
+    .click-indicator {
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      background-color: grey;
+    }
+    </style>
+  </head>
+  <body>
+    <h1>Metronome</h1>
+    <form id="metronome-form">
+  <fieldset>
+    <legend>Setup</legend>
+
+    <div class="fieldset fieldset--setup">
+      <div class="field field--tempo">
+        <div class="field__label">
+          <label for="tempo">Tempo (BPM):</label>
+        </div>
+        <div class="field__input">
+          <input type="integer" id="tempo" size="3" value="80" minValue="40" maxValue="250">
+        </div>
+      </div>
+
+      <div class="field field--indicator">
+        <div class="field_input">
+            <div class="click-indicator"></div>
+        </div>
+      </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Playback</legend>
+
+    <div class="fieldset fieldset--generator">
+      <div class="field field--skip-rate">
+        <div class="field__label">
+          <label for="skip-rate">Skip Rate:</label>
+        </div>
+        <div class="field__input">
+          <input id="skip-rate" type="integer" size="3" min="1" max="100" value="0" >%
+        </div>
+      </div>
+
+      <!--div class="field field--skew-tempo">
+        <div class="field__label">
+          <label for="skew-tempo">Skew Tempo:</label>
+        </div>
+        <div class="field__input">
+          <input type="checkbox" id="skew-tempo">
+        </div>
+      </div-->
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <button id="start-stop">Start</button>
+  </div>
+</form>
+  </body>
+
+  <script src="scripts/metronome.js" inline></script>
+</html>

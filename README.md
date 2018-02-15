@@ -14,10 +14,10 @@ You need to install [nodejs](https://nodejs.org) (including `npm`).
 Then inside the repository run `npm install` to install dependecies.
 
 ### Server
-`grunt serve` creates the app and serves it on localhost.
+`gulp serve` creates the app and serves it on localhost.
 
 ### Build
-`grund build` creates the app in the `build/` folder:
+`gulp build` creates the app in the `build/` folder:
 
 * `build/standalone.html` contains an HTML file with inlined assets, ready to use without a webserver or internet connection.
 * `build/app` contains the app in multiple files.

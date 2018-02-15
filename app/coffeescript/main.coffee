@@ -17,44 +17,28 @@ randomize_pitch = (pattern, pitches) ->
   pattern.replace(/c/g, () -> random(pitches))
 
 generate = () ->
-  patterns = $val('patterns').split(/\n/)
-    .filter((n) -> n.replace(/\s+/g, '').length > 0)
-  count = $val('count_count')
-  meter = $val('meter_count')
-  $clef = $$('clef')
-  clef=$clef.options[$clef.selectedIndex].value
-  console.log(clef)
-  key = $val('key')
-  unit = $val('unit_count')
-  pattern_length = $val('pattern_length')
-  pattern_count = $val('pattern_count')
-  rows = $val('row_count')
-  bars_per_row = $val('bars_per_row')
+  settings = readSettings()
+  console.log("readSettings", settings)
 
-  random_pitch = $$('random_pitch').checked
-  pitches = $val('pitches').match(TUNES_REGEXP)
-  patterns_per_bar = count / meter * pattern_length / pattern_count
-  patterns_per_row = 12
-  staffwidth = $val('staffwidth')
   abc_editor.paramChanged(
     {staffwidth: staffwidth}
   )
   #bars_per_row = Math.floor(patterns_per_row / patterns_per_bar)
-  front_matter = "M:#{count}/#{meter}\nL:1/#{unit}\nK:#{key} clef=#{clef}"
+  front_matter = "M:#{settings.count}/#{settings.meter}\nL:1/#{settings.unit}\nK:#{settings.key} clef=#{settings.clef}"
   text = [front_matter]
-  console.log patterns
-  for i in [1..rows]
+  console.log settings.patterns
+  for i in [1..settings.rows]
     row = []
-    for j in [1..bars_per_row]
+    for j in [1..settings.bars_per_row]
       bar = []
-      for k in [1..patterns_per_bar]
-        pattern = random(patterns)
-        if(random_pitch)
-          pattern = randomize_pitch(pattern, pitches)
+      for k in [1..settings.patterns_per_bar]
+        pattern = random(settings.patterns)
+        if(settings.random_pitch)
+          pattern = randomize_pitch(pattern, settings.pitches)
         bar.push(pattern)
 
       barString = bar.join(' ')
-      barString = normalizeBarString(barString, key)
+      barString = normalizeBarString(barString, settings.key)
       row.push(barString)
     # empty space at begin of row,
     # beam at end
@@ -67,9 +51,14 @@ generate = () ->
   setCaretPosition($composition, 0)
   abc_editor.fireChanged()
 
+  storeSettingsToLocation(settings)
+
 initialize = () ->
   initializeToggle()
   initializeWidthSetting()
+  initializeSettings()
+
+  generate()
 
 initializeToggle = () ->
   $$('toggle-handler').addEventListener 'click', () ->
@@ -84,8 +73,12 @@ initializeToggle = () ->
 initializeWidthSetting = () ->
   $$('staffwidth').value = 1100 if window.innerWidth > 1600
 
-window.addEventListener('load', initialize)
-window.addEventListener('load', generate)
+window.addEventListener 'load', initialize
+window.addEventListener 'popstate', (popstate) ->
+  settings = popstate.state
+  return if settings == undefined
+  applySettings(settings)
+  generate()
 
 $$('download-svg').addEventListener 'click', (e) ->
   e.preventDefault()

@@ -63,4 +63,4 @@ normalizeBarString = (s, key=null) ->
   processed = (process(tune) for tune in tunes)
   processed.join('')
 
-module.exports = normalizeBarString unless module == undefined
+# module.exports = normalizeBarString unless module == undefined

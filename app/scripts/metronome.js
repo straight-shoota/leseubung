@@ -23,11 +23,11 @@ function Metronome() {
   }
 
   this.playClick = function(){
-    delay = .8
+    delay = .3
 
     var oscillator = this.context.createOscillator()
-    oscillator.type = "sine"
-    oscillator.frequency = 880
+    oscillator.type = "square";
+    oscillator.frequency.setValueAtTime(440, this.context.currentTime);
     oscillator.start(0)
 
     var gain = this.context.createGain()
@@ -39,7 +39,7 @@ function Metronome() {
     var indicator = this.clickIndicator;
     setTimeout(function(){
       indicator.style.backgroundColor = "grey"
-    }, delay * 100 * 2);
+    }, 100);
 
     gain.gain.exponentialRampToValueAtTime(
         0.00001, this.context.currentTime + delay

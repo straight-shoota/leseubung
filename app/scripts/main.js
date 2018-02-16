@@ -34,7 +34,7 @@ generate = function() {
   settings = readSettings();
   console.log("readSettings", settings);
   abc_editor.paramChanged({
-    staffwidth: staffwidth
+    staffwidth: settings.staffwidth
   });
   front_matter = "M:" + settings.count + "/" + settings.meter + "\nL:1/" + settings.unit + "\nK:" + settings.key + " clef=" + settings.clef;
   text = [front_matter];
@@ -267,11 +267,16 @@ var applySettings, initializeSettings, loadSettingsFromLocation, readSettings, s
 storeSettingsToLocation = function(settings) {
   var base, settings_hash, url;
   base = window.location.href.replace(/#.*/, "");
+  console.log("store settings", settings);
   settings_hash = Object.keys(settings).map(function(key) {
-    return key + '=' + settings[key];
+    var value;
+    value = settings[key];
+    if (key === "pitches") {
+      value = value.join("|");
+    }
+    return key + '=' + value;
   }).join('&');
   url = base + "#" + settings_hash;
-  console.log(base, url);
   return history.pushState(settings, "Leseübung", url);
 };
 
@@ -283,6 +288,8 @@ loadSettingsFromLocation = function() {
     item = part.split("=");
     return result[item[0]] = decodeURIComponent(item[1]);
   });
+  result.patterns = result.patterns.replace(/,/g, "\n");
+  result.pitches = result.pitches.replace(/\s*\|\s*/g, " | ");
   return result;
 };
 
@@ -290,7 +297,6 @@ initializeSettings = function() {
   var settings;
   if (location.hash !== "") {
     settings = loadSettingsFromLocation();
-    console.log("loaded settings", settings);
     return applySettings(settings);
   }
 };

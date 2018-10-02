@@ -1,3 +1,5 @@
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+
 function Metronome() {
   this.settings = {
     tempo: 80,
@@ -27,7 +29,7 @@ function Metronome() {
 
     var oscillator = this.context.createOscillator()
     oscillator.type = "square";
-    oscillator.frequency.setValueAtTime(440, this.context.currentTime);
+    //oscillator.frequency.setValueAtTime(440, this.context.currentTime);
     oscillator.start(0)
 
     var gain = this.context.createGain()
